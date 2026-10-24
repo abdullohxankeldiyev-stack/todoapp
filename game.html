@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER-TASK PRO | Cyber Arena Mini-O'yin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+        
+        body {
+            background-color: #070913;
+            color: #e2e8f0;
+            font-family: 'Rajdhani', sans-serif;
+            background-image: radial-gradient(circle at 50% 20%, rgba(255, 0, 127, 0.12) 0%, transparent 60%);
+        }
+
+        .orbitron { font-family: 'Orbitron', sans-serif; }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 0, 127, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        canvas {
+            background: radial-gradient(circle, #0f172a 0%, #05070f 100%);
+            border: 2px solid #00f3ff;
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.25);
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- NAVBAR -->
+    <nav class="glass-card sticky top-0 z-50 border-b border-pink-500/30 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
+            <a href="index.html" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-pink-500/20 border border-pink-400 flex items-center justify-center shadow-[0_0_15px_rgba(255,0,127,0.4)]">
+                    <i class="fa-solid fa-gamepad text-pink-400 text-xl"></i>
+                </div>
+                <div>
+                    <span class="orbitron text-xl font-black tracking-wider text-white">CYBER<span class="text-pink-400">ARENA</span></span>
+                    <span class="block text-[10px] tracking-widest text-pink-400 uppercase">Mini-Game Module</span>
+                </div>
+            </a>
+
+            <div class="flex items-center space-x-6 text-lg font-semibold">
+                <a href="index.html" class="text-slate-300 hover:text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+                <a href="tasks.html" class="text-slate-300 hover:text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-list-check"></i> Vazifalar</a>
+                <a href="pomodoro.html" class="text-slate-300 hover:text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-stopwatch"></i> Fokus Taymer</a>
+                <a href="game.html" class="text-pink-400 border-b-2 border-pink-400 pb-1 flex items-center gap-2"><i class="fa-solid fa-gamepad"></i> Cyber Arena</a>
+                <a href="telegram.html" class="text-slate-300 hover:text-sky-400 flex items-center gap-2"><i class="fa-brands fa-telegram"></i> Telegram Bot</a>
+            </div>
+
+            <div class="flex items-center gap-4 bg-slate-900/80 px-4 py-1.5 rounded-full border border-slate-700">
+                <i class="fa-solid fa-coins text-yellow-400"></i>
+                <span id="nav-coins" class="orbitron font-bold text-yellow-400">0</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- GAME AREA -->
+    <main class="flex-grow max-w-6xl w-full mx-auto px-6 py-8 flex flex-col items-center">
+        
+        <div class="w-full flex flex-wrap justify-between items-center gap-4 mb-4 glass-card p-4 rounded-2xl">
+            <div class="flex items-center gap-6">
+                <div>
+                    <span class="text-xs uppercase text-slate-400 block">Joriy Ball (Score)</span>
+                    <span id="game-score" class="orbitron text-3xl font-black text-cyan-400">0</span>
+                </div>
+                <div>
+                    <span class="text-xs uppercase text-slate-400 block">Rekord (High Score)</span>
+                    <span id="game-high" class="orbitron text-3xl font-black text-pink-400">0</span>
+                </div>
+                <div>
+                    <span class="text-xs uppercase text-slate-400 block">Vaqt</span>
+                    <span id="game-time" class="orbitron text-3xl font-black text-yellow-400">30s</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="startGame()" id="btn-start-game" class="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white font-black orbitron px-6 py-3 rounded-xl shadow-[0_0_20px_rgba(255,0,127,0.5)] transition">
+                    <i class="fa-solid fa-play mr-2"></i> O'YINNI BOSHLASH
+                </button>
+            </div>
+        </div>
+
+        <canvas id="gameCanvas" width="850" height="450" class="rounded-2xl max-w-full"></canvas>
+        <p class="text-slate-400 text-sm mt-3"><i class="fa-solid fa-circle-info text-cyan-400"></i> Qoida: Ekranda paydo bo'ladigan yashil va pushti kiber-nishonlarni sichqoncha bilan tezda bosing! Har bir urilgan nishon sizga Coin va XP qo'shadi.</p>
+    </main>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        let score = 0;
+        let timeLeft = 30;
+        let gameActive = false;
+        let targets = [];
+        let particles = [];
+        let timerId = null;
+
+        function playLaser(freq = 900) {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+            } catch(e){}
+        }
+
+        function syncUser() {
+            const user = JSON.parse(localStorage.getItem('cyber_user')) || { coins: 0, xp: 0, highScore: 0 };
+            document.getElementById('nav-coins').innerText = user.coins;
+            document.getElementById('game-high').innerText = user.highScore || 0;
+        }
+
+        function spawnTarget() {
+            if (!gameActive) return;
+            const radius = Math.random() * 15 + 18;
+            targets.push({
+                x: Math.random() * (canvas.width - radius * 2) + radius,
+                y: Math.random() * (canvas.height - radius * 2) + radius,
+                r: radius,
+                dx: (Math.random() - 0.5) * 4,
+                dy: (Math.random() - 0.5) * 4,
+                color: Math.random() > 0.3 ? '#00f3ff' : '#ff007f',
+                points: Math.random() > 0.3 ? 10 : 25
+            });
+        }
+
+        function createExplosion(x, y, color) {
+            for (let i = 0; i < 15; i++) {
+                particles.push({
+                    x, y,
+                    dx: (Math.random() - 0.5) * 8,
+                    dy: (Math.random() - 0.5) * 8,
+                    alpha: 1,
+                    color
+                });
+            }
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            if (!gameActive) return;
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const mouseX = (e.clientX - rect.left) * scaleX;
+            const mouseY = (e.clientY - rect.top) * scaleY;
+
+            for (let i = targets.length - 1; i >= 0; i--) {
+                const t = targets[i];
+                const dist = Math.hypot(mouseX - t.x, mouseY - t.y);
+                if (dist <= t.r + 5) {
+                    score += t.points;
+                    document.getElementById('game-score').innerText = score;
+                    createExplosion(t.x, t.y, t.color);
+                    playLaser(t.points === 25 ? 1200 : 800);
+                    targets.splice(i, 1);
+                    spawnTarget();
+                    break;
+                }
+            }
+        });
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Grid chiziqlari
+            ctx.strokeStyle = 'rgba(0, 243, 255, 0.05)';
+            for (let x = 0; x < canvas.width; x += 40) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += 40) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+            }
+
+            if (gameActive) {
+                targets.forEach(t => {
+                    t.x += t.dx;
+                    t.y += t.dy;
+                    if (t.x - t.r < 0 || t.x + t.r > canvas.width) t.dx *= -1;
+                    if (t.y - t.r < 0 || t.y + t.r > canvas.height) t.dy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(t.x, t.y, t.r, 0, Math.PI * 2);
+                    ctx.fillStyle = t.color;
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = t.color;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                });
+            } else {
+                ctx.fillStyle = '#00f3ff';
+                ctx.font = 'bold 26px Orbitron';
+                ctx.textAlign = 'center';
+                ctx.fillText('BOSHLASH TUGMASINI BOSING!', canvas.width / 2, canvas.height / 2);
+            }
+
+            // Partikllar
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.dx;
+                p.y += p.dy;
+                p.alpha -= 0.03;
+                if (p.alpha <= 0) {
+                    particles.splice(i, 1);
+                    continue;
+                }
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.alpha;
+                ctx.fillRect(p.x, p.y, 4, 4);
+                ctx.globalAlpha = 1;
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        function startGame() {
+            if (gameActive) return;
+            score = 0;
+            timeLeft = 30;
+            targets = [];
+            gameActive = true;
+            document.getElementById('game-score').innerText = '0';
+            document.getElementById('game-time').innerText = '30s';
+
+            for (let i = 0; i < 5; i++) spawnTarget();
+
+            timerId = setInterval(() => {
+                timeLeft--;
+                document.getElementById('game-time').innerText = timeLeft + 's';
+                if (timeLeft <= 0) {
+                    clearInterval(timerId);
+                    gameActive = false;
+                    
+                    let user = JSON.parse(localStorage.getItem('cyber_user')) || { coins: 0, xp: 0, highScore: 0 };
+                    const earnedCoins = Math.floor(score / 5);
+                    user.coins += earnedCoins;
+                    user.xp += Math.floor(score / 2);
+                    if (score > (user.highScore || 0)) user.highScore = score;
+                    localStorage.setItem('cyber_user', JSON.stringify(user));
+                    syncUser();
+
+                    alert(`🎮 O'yin tugadi!\nTo'plangan ball: ${score}\nQo'shilgan Coinlar: +${earnedCoins}`);
+                }
+            }, 1000);
+        }
+
+        syncUser();
+        animate();
+    </script>
+</body>
+</html>

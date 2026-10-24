@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER-TASK PRO | Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --neon-cyan: #00f3ff;
+            --neon-pink: #ff007f;
+            --neon-purple: #b500ff;
+            --dark-bg: #070913;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #e2e8f0;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 243, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(181, 0, 255, 0.08) 0%, transparent 50%);
+        }
+
+        .orbitron { font-family: 'Orbitron', sans-serif; }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(0, 243, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(0, 243, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(0, 243, 255, 0.15), inset 0 0 20px rgba(0, 243, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .neon-text-cyan {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.7);
+        }
+
+        .neon-text-pink {
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px rgba(255, 0, 127, 0.7);
+        }
+
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--neon-cyan);
+            box-shadow: 0 0 10px var(--neon-cyan);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+
+        .progress-bar-glow {
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .floating { animation: float 4s ease-in-out infinite; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #070913; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; border: 1px solid rgba(0,243,255,0.3); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- NAVBAR (5 TA SAHIFA UCHUN HAQIQIY HAVOLALAR) -->
+    <nav class="glass-card sticky top-0 z-50 border-b border-cyan-500/30 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-lg bg-cyan-500/20 border border-cyan-400 flex items-center justify-center shadow-[0_0_15px_rgba(0,243,255,0.4)] group-hover:rotate-12 transition">
+                    <i class="fa-solid fa-bolt text-cyan-400 text-xl"></i>
+                </div>
+                <div>
+                    <span class="orbitron text-xl font-black tracking-wider text-white">CYBER<span class="neon-text-cyan">TASK</span></span>
+                    <span class="block text-[10px] tracking-widest text-cyan-400 uppercase">Pro OS v2.6</span>
+                </div>
+            </a>
+
+            <div class="flex items-center space-x-6 text-lg font-semibold">
+                <a href="index.html" class="nav-link active text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+                <a href="tasks.html" class="nav-link text-slate-300 hover:text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-list-check"></i> Vazifalar</a>
+                <a href="pomodoro.html" class="nav-link text-slate-300 hover:text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-stopwatch"></i> Fokus Taymer</a>
+                <a href="game.html" class="nav-link text-slate-300 hover:text-pink-400 flex items-center gap-2"><i class="fa-solid fa-gamepad"></i> Cyber Arena</a>
+                <a href="telegram.html" class="nav-link text-slate-300 hover:text-sky-400 flex items-center gap-2"><i class="fa-brands fa-telegram"></i> Telegram Bot</a>
+            </div>
+
+            <!-- User Level & Coins -->
+            <div class="flex items-center gap-4 bg-slate-900/80 px-4 py-1.5 rounded-full border border-slate-700">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-coins text-yellow-400 animate-pulse"></i>
+                    <span id="nav-coins" class="orbitron font-bold text-yellow-400">0</span>
+                </div>
+                <div class="h-4 w-[1px] bg-slate-700"></div>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-slate-400 uppercase">LVL</span>
+                    <span id="nav-level" class="orbitron font-bold text-cyan-400">1</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-6 py-8">
+        
+        <!-- Welcome Banner -->
+        <div class="glass-card rounded-2xl p-8 mb-8 relative overflow-hidden">
+            <div class="absolute -right-10 -top-10 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-bold tracking-widest uppercase mb-3">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span> Tizim Faol Holatda
+                    </div>
+                    <h1 class="orbitron text-3xl md:text-5xl font-black text-white mb-2">XUSH KELIBSIZ, <span class="neon-text-cyan">KOMANDIR!</span></h1>
+                    <p class="text-slate-400 text-lg max-w-xl">Bugungi kunni zabt etishga tayyormisiz? Har bir bajarilgan vazifa sizga XP, Tanga va yuqori unumdorlik olib keladi.</p>
+                </div>
+                <div class="glass-card p-5 rounded-xl border border-pink-500/30 text-center min-w-[240px] floating">
+                    <div id="live-clock" class="orbitron text-3xl font-black text-white tracking-widest mb-1">00:00:00</div>
+                    <div id="live-date" class="text-sm text-pink-400 font-semibold uppercase tracking-wider">Yuklanmoqda...</div>
+                    <div class="mt-4 pt-3 border-t border-slate-700/60 flex justify-between items-center text-xs text-slate-300">
+                        <span>XP Progress:</span>
+                        <span id="xp-text" class="orbitron text-cyan-400">0 / 100 XP</span>
+                    </div>
+                    <div class="w-full h-2 bg-slate-800 rounded-full mt-1.5 overflow-hidden">
+                        <div id="xp-bar" class="h-full bg-gradient-to-r from-cyan-400 to-pink-500 progress-bar-glow transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4 STAT CARDS -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="glass-card p-6 rounded-2xl flex items-center justify-between">
+                <div>
+                    <p class="text-slate-400 text-sm uppercase tracking-wider font-semibold">Jami Vazifalar</p>
+                    <h3 id="stat-total" class="orbitron text-4xl font-black text-white mt-1">0</h3>
+                    <span class="text-xs text-cyan-400 mt-2 inline-block"><i class="fa-solid fa-layer-group"></i> Barcha ro'yxat</span>
+                </div>
+                <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-2xl">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                </div>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl flex items-center justify-between">
+                <div>
+                    <p class="text-slate-400 text-sm uppercase tracking-wider font-semibold">Bajarilgan</p>
+                    <h3 id="stat-completed" class="orbitron text-4xl font-black text-emerald-400 mt-1">0</h3>
+                    <span class="text-xs text-emerald-400 mt-2 inline-block"><i class="fa-solid fa-check-double"></i> Muvaffaqiyatli</span>
+                </div>
+                <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-2xl">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl flex items-center justify-between">
+                <div>
+                    <p class="text-slate-400 text-sm uppercase tracking-wider font-semibold">Kutilmoqda</p>
+                    <h3 id="stat-pending" class="orbitron text-4xl font-black text-amber-400 mt-1">0</h3>
+                    <span class="text-xs text-amber-400 mt-2 inline-block"><i class="fa-solid fa-hourglass-half"></i> Jarayonda</span>
+                </div>
+                <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-2xl">
+                    <i class="fa-solid fa-fire-flame-curved"></i>
+                </div>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl flex items-center justify-between">
+                <div>
+                    <p class="text-slate-400 text-sm uppercase tracking-wider font-semibold">Unumdorlik</p>
+                    <h3 id="stat-rate" class="orbitron text-4xl font-black text-pink-400 mt-1">0%</h3>
+                    <span class="text-xs text-pink-400 mt-2 inline-block"><i class="fa-solid fa-bolt"></i> Samaradorlik</span>
+                </div>
+                <div class="w-14 h-14 rounded-2xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-pink-400 text-2xl">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- LOWER GRID: QUICK TASKS & CHART -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Quick Add & Urgent Tasks -->
+            <div class="lg:col-span-2 glass-card rounded-2xl p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="orbitron text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-rocket text-cyan-400"></i> Tezkor Vazifa Qo'shish
+                    </h2>
+                    <a href="tasks.html" class="text-sm text-cyan-400 hover:underline flex items-center gap-1">
+                        Barchasini ko'rish <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <form id="quick-task-form" class="flex flex-col sm:flex-row gap-3 mb-6">
+                    <input type="text" id="quick-title" required placeholder="Yangi vazifa nomini yozing..." 
+                        class="flex-grow bg-slate-900/90 border border-slate-700 focus:border-cyan-400 rounded-xl px-4 py-3 text-white outline-none transition">
+                    <select id="quick-priority" class="bg-slate-900/90 border border-slate-700 focus:border-cyan-400 rounded-xl px-4 py-3 text-white outline-none">
+                        <option value="high">🔥 Yuqori (High)</option>
+                        <option value="medium" selected>⚡ O'rta (Medium)</option>
+                        <option value="low">💧 Past (Low)</option>
+                    </select>
+                    <button type="submit" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold orbitron px-6 py-3 rounded-xl shadow-[0_0_15px_rgba(0,243,255,0.4)] transition">
+                        QO'SHISH
+                    </button>
+                </form>
+
+                <h3 class="text-sm uppercase tracking-wider text-slate-400 font-bold mb-3">Oxirgi faol vazifalar:</h3>
+                <div id="recent-tasks-list" class="space-y-3">
+                    <!-- JS populates this -->
+                </div>
+            </div>
+
+            <!-- System Analytics & Quick Links -->
+            <div class="glass-card rounded-2xl p-6 flex flex-col justify-between">
+                <div>
+                    <h2 class="orbitron text-xl font-bold text-white flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-microchip text-pink-400"></i> Tizim Modullari
+                    </h2>
+                    <p class="text-slate-400 text-sm mb-6">Vazifalarni bajarib tangalar yig'ing va ularni Cyber Arenada ishlating yoki hisobotlarni Telegram botga jo'nating.</p>
+
+                    <div class="space-y-3">
+                        <a href="tasks.html" class="block p-4 rounded-xl bg-slate-900/70 border border-slate-800 hover:border-cyan-400 transition flex items-center justify-between group">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-list-check text-cyan-400 text-xl"></i>
+                                <div>
+                                    <div class="font-bold text-white group-hover:text-cyan-400 transition">Vazifalar Menejyeri</div>
+                                    <div class="text-xs text-slate-400">To'liq filtrlash, qidiruv va tahrirlash</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-slate-500 group-hover:translate-x-1 transition"></i>
+                        </a>
+
+                        <a href="pomodoro.html" class="block p-4 rounded-xl bg-slate-900/70 border border-slate-800 hover:border-purple-400 transition flex items-center justify-between group">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-stopwatch text-purple-400 text-xl"></i>
+                                <div>
+                                    <div class="font-bold text-white group-hover:text-purple-400 transition">Pomodoro & Fokus</div>
+                                    <div class="text-xs text-slate-400">Chalg'imasdan ishlash taymeri</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-slate-500 group-hover:translate-x-1 transition"></i>
+                        </a>
+
+                        <a href="game.html" class="block p-4 rounded-xl bg-slate-900/70 border border-slate-800 hover:border-pink-400 transition flex items-center justify-between group">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-gamepad text-pink-400 text-xl"></i>
+                                <div>
+                                    <div class="font-bold text-white group-hover:text-pink-400 transition">Cyber Bug Smasher</div>
+                                    <div class="text-xs text-slate-400">Mini o'yin orqali dam oling va coin yuting</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-slate-500 group-hover:translate-x-1 transition"></i>
+                        </a>
+
+                        <a href="telegram.html" class="block p-4 rounded-xl bg-slate-900/70 border border-slate-800 hover:border-sky-400 transition flex items-center justify-between group">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-brands fa-telegram text-sky-400 text-xl"></i>
+                                <div>
+                                    <div class="font-bold text-white group-hover:text-sky-400 transition">Telegram Bot Integratsiya</div>
+                                    <div class="text-xs text-slate-400">Real vaqtda botga ma'lumot uzatish</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-slate-500 group-hover:translate-x-1 transition"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-slate-500">
+                    <span>Xotira holati: Sinxronlangan</span>
+                    <button onclick="resetAllData()" class="text-rose-400 hover:underline"><i class="fa-solid fa-rotate-right"></i> Tizimni tozalash</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass-card border-t border-slate-800 py-4 px-6 text-center text-sm text-slate-400 mt-12">
+        CYBER-TASK PRO OS &copy; 2026 | Barcha 5 sahifa LocalStorage orqali ulangan.
+    </footer>
+
+    <script>
+        // OVOZ EFEKTLARI (Web Audio API)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(freq = 600, type = 'sine', duration = 0.1) {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) {}
+        }
+
+        // DEFAULT MA'LUMOTLARNI YUKLASH YOKI YARATISH
+        function initStorage() {
+            if (!localStorage.getItem('cyber_tasks')) {
+                const sampleTasks = [
+                    { id: Date.now() - 3000, title: "Cyber-Task Pro tizimini sinab ko'rish", category: "IT Loyiha", priority: "high", completed: true, date: new Date().toLocaleDateString() },
+                    { id: Date.now() - 2000, title: "Kunlik rejalarni Tasks sahifasiga kiritish", category: "Shaxsiy", priority: "high", completed: false, date: new Date().toLocaleDateString() },
+                    { id: Date.now() - 1000, title: "Telegram Bot orqali birinchi hisobotni yuborish", category: "Bot", priority: "medium", completed: false, date: new Date().toLocaleDateString() }
+                ];
+                localStorage.setItem('cyber_tasks', JSON.stringify(sampleTasks));
+            }
+            if (!localStorage.getItem('cyber_user')) {
+                localStorage.setItem('cyber_user', JSON.stringify({ coins: 50, xp: 35, level: 1, highScore: 0 }));
+            }
+        }
+
+        function updateDashboard() {
+            const tasks = JSON.parse(localStorage.getItem('cyber_tasks')) || [];
+            const user = JSON.parse(localStorage.getItem('cyber_user')) || { coins: 0, xp: 0, level: 1 };
+
+            // Nav stats
+            const calculatedLevel = Math.floor(user.xp / 100) + 1;
+            const currentLevelXp = user.xp % 100;
+            document.getElementById('nav-coins').innerText = user.coins;
+            document.getElementById('nav-level').innerText = calculatedLevel;
+            document.getElementById('xp-text').innerText = `${currentLevelXp} / 100 XP`;
+            document.getElementById('xp-bar').style.width = `${currentLevelXp}%`;
+
+            // Task stats
+            const total = tasks.length;
+            const completed = tasks.filter(t => t.completed).length;
+            const pending = total - completed;
+            const rate = total === 0 ? 0 : Math.round((completed / total) * 100);
+
+            document.getElementById('stat-total').innerText = total;
+            document.getElementById('stat-completed').innerText = completed;
+            document.getElementById('stat-pending').innerText = pending;
+            document.getElementById('stat-rate').innerText = `${rate}%`;
+
+            // Render recent tasks
+            const listEl = document.getElementById('recent-tasks-list');
+            listEl.innerHTML = '';
+            const recent = tasks.slice().reverse().slice(0, 5);
+
+            if (recent.length === 0) {
+                listEl.innerHTML = `<div class="text-center py-8 text-slate-500">Hozircha vazifalar yo'q. Yuqoridan yangi vazifa qo'shing!</div>`;
+                return;
+            }
+
+            recent.forEach(task => {
+                const badgeColor = task.priority === 'high' ? 'bg-rose-500/20 text-rose-400 border-rose-500/40' :
+                                   task.priority === 'medium' ? 'bg-amber-500/20 text-amber-400 border-amber-500/40' :
+                                   'bg-cyan-500/20 text-cyan-400 border-cyan-500/40';
+
+                const div = document.createElement('div');
+                div.className = `flex items-center justify-between p-4 rounded-xl bg-slate-900/80 border ${task.completed ? 'border-emerald-500/30 opacity-60' : 'border-slate-800'} transition hover:border-cyan-500/40`;
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleTask(${task.id})" class="w-6 h-6 rounded-md border ${task.completed ? 'bg-emerald-500 border-emerald-400 text-slate-950' : 'border-slate-600 hover:border-cyan-400'} flex items-center justify-center transition">
+                            ${task.completed ? '<i class="fa-solid fa-check text-xs font-bold"></i>' : ''}
+                        </button>
+                        <span class="${task.completed ? 'line-through text-slate-500' : 'text-white font-medium'} text-lg">${task.title}</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs px-2.5 py-1 rounded-full border ${badgeColor} uppercase font-bold">${task.priority}</span>
+                    </div>
+                `;
+                listEl.appendChild(div);
+            });
+        }
+
+        function toggleTask(id) {
+            let tasks = JSON.parse(localStorage.getItem('cyber_tasks')) || [];
+            let user = JSON.parse(localStorage.getItem('cyber_user'));
+            
+            tasks = tasks.map(t => {
+                if (t.id === id) {
+                    t.completed = !t.completed;
+                    if (t.completed) {
+                        user.coins += 15;
+                        user.xp += 25;
+                        playSound(880, 'triangle', 0.2);
+                    } else {
+                        user.coins = Math.max(0, user.coins - 15);
+                        user.xp = Math.max(0, user.xp - 25);
+                        playSound(300, 'sine', 0.15);
+                    }
+                }
+                return t;
+            });
+
+            localStorage.setItem('cyber_tasks', JSON.stringify(tasks));
+            localStorage.setItem('cyber_user', JSON.stringify(user));
+            updateDashboard();
+        }
+
+        document.getElementById('quick-task-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const titleInput = document.getElementById('quick-title');
+            const priorityInput = document.getElementById('quick-priority');
+            
+            const tasks = JSON.parse(localStorage.getItem('cyber_tasks')) || [];
+            tasks.push({
+                id: Date.now(),
+                title: titleInput.value.trim(),
+                category: 'Umumiy',
+                priority: priorityInput.value,
+                completed: false,
+                date: new Date().toLocaleDateString()
+            });
+
+            localStorage.setItem('cyber_tasks', JSON.stringify(tasks));
+            titleInput.value = '';
+            playSound(650, 'sine', 0.15);
+            updateDashboard();
+        });
+
+        function resetAllData() {
+            if (confirm("Haqiqatan ham barcha vazifalar va ballarni nolga tushirmoqchimisiz?")) {
+                localStorage.clear();
+                initStorage();
+                updateDashboard();
+            }
+        }
+
+        // Live Clock
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('live-clock').innerText = now.toLocaleTimeString('uz-UZ');
+            document.getElementById('live-date').innerText = now.toLocaleDateString('uz-UZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        }
+        setInterval(updateClock, 1000);
+
+        initStorage();
+        updateClock();
+        updateDashboard();
+    </script>
+</body>
+</html>

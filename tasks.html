@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER-TASK PRO | Vazifalar Markazi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+        
+        body {
+            background-color: #070913;
+            color: #e2e8f0;
+            font-family: 'Rajdhani', sans-serif;
+            background-image: 
+                radial-gradient(circle at 80% 20%, rgba(0, 243, 255, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 20% 80%, rgba(255, 0, 127, 0.08) 0%, transparent 45%);
+        }
+
+        .orbitron { font-family: 'Orbitron', sans-serif; }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        }
+
+        .task-item {
+            transition: all 0.25s ease;
+        }
+        .task-item:hover {
+            transform: translateX(4px);
+            border-color: rgba(0, 243, 255, 0.5);
+        }
+
+        .nav-link { position: relative; }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: -4px; left: 0; width: 0%; height: 2px;
+            background: #00f3ff; box-shadow: 0 0 10px #00f3ff; transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- NAVBAR -->
+    <nav class="glass-card sticky top-0 z-50 border-b border-cyan-500/30 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
+            <a href="index.html" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-cyan-500/20 border border-cyan-400 flex items-center justify-center shadow-[0_0_15px_rgba(0,243,255,0.4)]">
+                    <i class="fa-solid fa-bolt text-cyan-400 text-xl"></i>
+                </div>
+                <div>
+                    <span class="orbitron text-xl font-black tracking-wider text-white">CYBER<span class="text-cyan-400">TASK</span></span>
+                    <span class="block text-[10px] tracking-widest text-cyan-400 uppercase">Pro OS v2.6</span>
+                </div>
+            </a>
+
+            <div class="flex items-center space-x-6 text-lg font-semibold">
+                <a href="index.html" class="nav-link text-slate-300 hover:text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+                <a href="tasks.html" class="nav-link active text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-list-check"></i> Vazifalar</a>
+                <a href="pomodoro.html" class="nav-link text-slate-300 hover:text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-stopwatch"></i> Fokus Taymer</a>
+                <a href="game.html" class="nav-link text-slate-300 hover:text-pink-400 flex items-center gap-2"><i class="fa-solid fa-gamepad"></i> Cyber Arena</a>
+                <a href="telegram.html" class="nav-link text-slate-300 hover:text-sky-400 flex items-center gap-2"><i class="fa-brands fa-telegram"></i> Telegram Bot</a>
+            </div>
+
+            <div class="flex items-center gap-4 bg-slate-900/80 px-4 py-1.5 rounded-full border border-slate-700">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-coins text-yellow-400"></i>
+                    <span id="nav-coins" class="orbitron font-bold text-yellow-400">0</span>
+                </div>
+                <div class="h-4 w-[1px] bg-slate-700"></div>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-slate-400">LVL</span>
+                    <span id="nav-level" class="orbitron font-bold text-cyan-400">1</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENT -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-6 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- LEFT: ADD NEW TASK FORM -->
+            <div class="glass-card rounded-2xl p-6 h-fit">
+                <h2 class="orbitron text-xl font-bold text-white mb-6 flex items-center gap-2 border-b border-slate-800 pb-3">
+                    <i class="fa-solid fa-plus-circle text-cyan-400"></i> Yangi Missiya Yaratish
+                </h2>
+
+                <form id="full-task-form" class="space-y-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-slate-400 font-bold mb-1">Vazifa Nomi *</label>
+                        <input type="text" id="t-title" required placeholder="Masalan: Matematika uy ishi..." 
+                            class="w-full bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl px-4 py-3 text-white outline-none">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs uppercase tracking-wider text-slate-400 font-bold mb-1">Kategoriya</label>
+                            <select id="t-category" class="w-full bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl px-3 py-3 text-white outline-none">
+                                <option value="O'qish">📚 O'qish / Maktab</option>
+                                <option value="IT Loyiha">💻 IT / Dasturlash</option>
+                                <option value="Shaxsiy">⚡ Shaxsiy</option>
+                                <option value="Sport">🏋️ Sport & Sog'liq</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase tracking-wider text-slate-400 font-bold mb-1">Muhimlik (Priority)</label>
+                            <select id="t-priority" class="w-full bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl px-3 py-3 text-white outline-none">
+                                <option value="high">🔥 Yuqori (+25 Coin)</option>
+                                <option value="medium" selected>⚡ O'rta (+15 Coin)</option>
+                                <option value="low">💧 Past (+10 Coin)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-slate-400 font-bold mb-1">Muddat (Sana)</label>
+                        <input type="date" id="t-date" class="w-full bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-white outline-none">
+                    </div>
+
+                    <button type="submit" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black orbitron py-3.5 rounded-xl shadow-[0_0_20px_rgba(0,243,255,0.4)] transition mt-2">
+                        <i class="fa-solid fa-bolt mr-1"></i> BAZAGA QO'SHISH
+                    </button>
+                </form>
+
+                <!-- Reward Info -->
+                <div class="mt-6 p-4 rounded-xl bg-cyan-500/5 border border-cyan-500/20 text-xs text-slate-300 space-y-1">
+                    <div class="font-bold text-cyan-400 uppercase mb-1"><i class="fa-solid fa-gift"></i> Mukofot Tizimi:</div>
+                    <p>• Har bir bajarilgan vazifa uchun <b>Coins</b> va <b>XP</b> beriladi.</p>
+                    <p>• Yig'ilgan tangalarni <b>Cyber Arena</b> sahifasida o'yinda ishlatishingiz mumkin!</p>
+                </div>
+            </div>
+
+            <!-- RIGHT: TASK LIST & FILTERS -->
+            <div class="lg:col-span-2 glass-card rounded-2xl p-6">
+                <!-- Search and Filter Bar -->
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6 pb-4 border-b border-slate-800">
+                    <div class="relative w-full md:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-500"></i>
+                        <input type="text" id="search-input" placeholder="Vazifalarni qidirish..." 
+                            class="w-full bg-slate-900 border border-slate-700 focus:border-cyan-400 rounded-xl pl-10 pr-4 py-2.5 text-white outline-none">
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                        <button onclick="setFilter('all')" id="flt-all" class="filter-btn bg-cyan-500 text-slate-950 font-bold px-4 py-2 rounded-lg text-sm transition">Barchasi</button>
+                        <button onclick="setFilter('pending')" id="flt-pending" class="filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold px-4 py-2 rounded-lg text-sm transition">Faol</button>
+                        <button onclick="setFilter('completed')" id="flt-completed" class="filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold px-4 py-2 rounded-lg text-sm transition">Bajarilgan</button>
+                        <button onclick="clearCompleted()" class="bg-rose-500/20 border border-rose-500/40 text-rose-400 hover:bg-rose-500 hover:text-white font-bold px-3 py-2 rounded-lg text-sm transition" title="Bajarilganlarni o'chirish">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tasks Container -->
+                <div id="tasks-container" class="space-y-3 max-h-[540px] overflow-y-auto pr-2">
+                    <!-- JS populates -->
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        let currentFilter = 'all';
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function beep(freq = 700, dur = 0.12) {
+            try {
+                const o = audioCtx.createOscillator();
+                const g = audioCtx.createGain();
+                o.frequency.value = freq;
+                g.gain.value = 0.08;
+                o.connect(g); g.connect(audioCtx.destination);
+                o.start(); o.stop(audioCtx.currentTime + dur);
+            } catch(e){}
+        }
+
+        function renderTasks() {
+            const tasks = JSON.parse(localStorage.getItem('cyber_tasks')) || [];
+            const user = JSON.parse(localStorage.getItem('cyber_user')) || { coins: 0, xp: 0 };
+            const search = document.getElementById('search-input').value.toLowerCase();
+
+            document.getElementById('nav-coins').innerText = user.coins;
+            document.getElementById('nav-level').innerText = Math.floor(user.xp / 100) + 1;
+
+            const container = document.getElementById('tasks-container');
+            container.innerHTML = '';
+
+            const filtered = tasks.filter(t => {
+                const matchesSearch = t.title.toLowerCase().includes(search) || (t.category && t.category.toLowerCase().includes(search));
+                if (currentFilter === 'pending') return !t.completed && matchesSearch;
+                if (currentFilter === 'completed') return t.completed && matchesSearch;
+                return matchesSearch;
+            }).reverse();
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-16 border border-dashed border-slate-800 rounded-2xl">
+                        <i class="fa-solid fa-box-open text-4xl text-slate-600 mb-3"></i>
+                        <p class="text-slate-400 text-lg">Hech qanday vazifa topilmadi</p>
+                    </div>`;
+                return;
+            }
+
+            filtered.forEach(task => {
+                const prioColors = {
+                    high: 'text-rose-400 border-rose-500/40 bg-rose-500/10',
+                    medium: 'text-amber-400 border-amber-500/40 bg-amber-500/10',
+                    low: 'text-cyan-400 border-cyan-500/40 bg-cyan-500/10'
+                };
+
+                const item = document.createElement('div');
+                item.className = `task-item p-4 rounded-xl bg-slate-900/90 border ${task.completed ? 'border-emerald-500/30 opacity-60' : 'border-slate-800'} flex flex-col sm:flex-row sm:items-center justify-between gap-4`;
+                item.innerHTML = `
+                    <div class="flex items-start sm:items-center gap-4">
+                        <button onclick="toggleStatus(${task.id})" class="mt-1 sm:mt-0 w-7 h-7 rounded-lg border-2 ${task.completed ? 'bg-emerald-500 border-emerald-400 text-slate-950' : 'border-slate-600 hover:border-cyan-400'} flex items-center justify-center transition flex-shrink-0">
+                            ${task.completed ? '<i class="fa-solid fa-check font-bold"></i>' : ''}
+                        </button>
+                        <div>
+                            <h4 class="text-lg font-bold ${task.completed ? 'line-through text-slate-500' : 'text-white'}">${task.title}</h4>
+                            <div class="flex flex-wrap items-center gap-2 mt-1 text-xs text-slate-400">
+                                <span class="px-2 py-0.5 rounded bg-slate-800 text-cyan-300 font-semibold"><i class="fa-solid fa-tag mr-1"></i>${task.category || 'Umumiy'}</span>
+                                <span><i class="fa-regular fa-calendar mr-1"></i>${task.date || 'Muddat yo\'q'}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-end gap-2">
+                        <span class="text-xs px-3 py-1 rounded-full border uppercase font-bold ${prioColors[task.priority] || prioColors.medium}">
+                            ${task.priority}
+                        </span>
+                        <button onclick="editTask(${task.id})" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-400 transition flex items-center justify-center">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="deleteTask(${task.id})" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-rose-500/20 text-slate-300 hover:text-rose-400 transition flex items-center justify-center">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        document.getElementById('full-task-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const title = document.getElementById('t-title').value.trim();
+            const category = document.getElementById('t-category').value;
+            const priority = document.getElementById('t-priority').value;
+            const date = document.getElementById('t-date').value || new Date().toLocaleDateString();
+
+            const tasks = JSON.parse(localStorage.getItem('cyber_tasks')) || [];
+            tasks.push({ id: Date.now(), title, category, priority, completed: false, date });
+            localStorage.setItem('cyber_tasks', JSON.stringify(tasks));
+
+            document.getElementById('t-title').value = '';
+            beep(750, 0.15);
+            renderTasks();
+        });
+
+        function toggleStatus(id) {
+            let tasks = JSON.parse(localStorage.getItem('cyber_tasks')) || [];
+            let user = JSON.parse(localStorage.getItem('cyber_user')) || { coins: 0, xp: 0 };
+
+            tasks = tasks.map(t => {
+                if (t.id === id) {
+                    t.completed = !t.completed;
+                    const reward = t.priority === 'high' ? 25 : t.priority === 'medium' ? 15 : 10;
+                    if (t.completed) {
+                        user.coins += reward;
+                        user.xp += reward + 10;
+                        beep(950, 0.2);
+                    } else {
+                        user.coins = Math.max(0, user.coins - reward);
+                        user.xp = Math.max(0, user.xp - (reward + 10));
+                        beep(350, 0.15);
+                    }
+                }
+                return t;
+            });
+
+            localStorage.setItem('cyber_tasks', JSON.stringify(tasks));
+            localStorage.setItem('cyber_user', JSON.stringify(user));
+            renderTasks();
+        }
+
+        function deleteTask(id) {
+            let tasks = JSON.parse(localStorage.getItem('cyber_tasks')) || [];
+            tasks = tasks.filter(t => t.id !== id);
+            localStorage.setItem('cyber_tasks', JSON.stringify(tasks));
+            beep(250, 0.15);
+            renderTasks();
+        }
+
+        function editTask(id) {
+            let tasks = JSON.parse(localStorage.getItem('cyber_tasks')) || [];
+            const task = tasks.find(t => t.id === id);
+            if (!task) return;
+            const newTitle = prompt("Vazifa nomini o'zgartiring:", task.title);
+            if (newTitle && newTitle.trim() !== '') {
+                task.title = newTitle.trim();
+                localStorage.setItem('cyber_tasks', JSON.stringify(tasks));
+                renderTasks();
+            }
+        }
+
+        function setFilter(flt) {
+            currentFilter = flt;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.className = 'filter-btn bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold px-4 py-2 rounded-lg text-sm transition';
+            });
+            document.getElementById('flt-' + flt).className = 'filter-btn bg-cyan-500 text-slate-950 font-bold px-4 py-2 rounded-lg text-sm transition';
+            renderTasks();
+        }
+
+        function clearCompleted() {
+            let tasks = JSON.parse(localStorage.getItem('cyber_tasks')) || [];
+            tasks = tasks.filter(t => !t.completed);
+            localStorage.setItem('cyber_tasks', JSON.stringify(tasks));
+            renderTasks();
+        }
+
+        document.getElementById('search-input').addEventListener('input', renderTasks);
+        renderTasks();
+    </script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER-TASK PRO | Telegram Bot Markazi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+        
+        body {
+            background-color: #070913;
+            color: #e2e8f0;
+            font-family: 'Rajdhani', sans-serif;
+            background-image: radial-gradient(circle at 80% 30%, rgba(56, 189, 248, 0.12) 0%, transparent 55%);
+        }
+
+        .orbitron { font-family: 'Orbitron', sans-serif; }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- NAVBAR -->
+    <nav class="glass-card sticky top-0 z-50 border-b border-sky-500/30 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
+            <a href="index.html" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-sky-500/20 border border-sky-400 flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.4)]">
+                    <i class="fa-brands fa-telegram text-sky-400 text-xl"></i>
+                </div>
+                <div>
+                    <span class="orbitron text-xl font-black tracking-wider text-white">CYBER<span class="text-sky-400">BOT</span></span>
+                    <span class="block text-[10px] tracking-widest text-sky-400 uppercase">Telegram Cloud Sync</span>
+                </div>
+            </a>
+
+            <div class="flex items-center space-x-6 text-lg font-semibold">
+                <a href="index.html" class="text-slate-300 hover:text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+                <a href="tasks.html" class="text-slate-300 hover:text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-list-check"></i> Vazifalar</a>
+                <a href="pomodoro.html" class="text-slate-300 hover:text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-stopwatch"></i> Fokus Taymer</a>
+                <a href="game.html" class="text-slate-300 hover:text-pink-400 flex items-center gap-2"><i class="fa-solid fa-gamepad"></i> Cyber Arena</a>
+                <a href="telegram.html" class="text-sky-400 border-b-2 border-sky-400 pb-1 flex items-center gap-2"><i class="fa-brands fa-telegram"></i> Telegram Bot</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENT -->
+    <main class="flex-grow max-w-5xl w-full mx-auto px-6 py-10">
+        
+        <div class="glass-card rounded-2xl p-8 mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-6 mb-6">
+                <div>
+                    <h1 class="orbitron text-2xl md:text-3xl font-black text-white flex items-center gap-3">
+                        <i class="fa-brands fa-telegram text-sky-400"></i> TELEGRAM BOT INTEGRATSIYASI
+                    </h1>
+                    <p class="text-slate-400 mt-1">Barcha vazifalar, statistika va eslatmalarni to'g'ridan-to'g'ri Telegram botingizga yuboring.</p>
+                </div>
+                <span id="bot-status-badge" class="px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 text-xs font-bold uppercase tracking-wider">
+                    <i class="fa-solid fa-signal mr-1"></i> Token Ulangan
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Bot Settings -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-slate-400 font-bold mb-1">Bot Token (Avtomatik Kiritilgan)</label>
+                        <input type="text" id="bot-token" readonly value="8970115945:AAEQ-I7hAtgg_bTVC24vAqgoJbPd3tZkztE" 
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sky-400 font-mono text-sm outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-slate-400 font-bold mb-1">Sizning Chat ID raqamingiz *</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="chat-id" placeholder="Chat ID ni kiriting yoki Avto-Aniqlashni bosing" 
+                                class="flex-grow bg-slate-900 border border-slate-700 focus:border-sky-400 rounded-xl px-4 py-3 text-white outline-none">
+                            <button onclick="autoDetectChatId()" class="bg-sky-500/20 border border-sky-400 hover:bg-sky-500 hover:text-slate-950 text-sky-300 font-bold px-4 py-3 rounded-xl text-sm transition whitespace-nowrap">
+                                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Avto-Aniqlash
+                            </button>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1.5">💡 <b>Maslahat:</b> Avval Telegramda botingizga kirib <code>/start</code> yoki salom deb yozing, so'ngra <b>"Avto-Aniqlash"</b> tugmasini bosing!</p>
+                    </div>
+
+                    <div class="pt-4 space-y-3">
+                        <button onclick="sendFullReport()" class="w-full bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-300 hover:to-blue-500 text-slate-950 font-black orbitron py-4 rounded-xl shadow-[0_0_20px_rgba(56,189,248,0.4)] transition">
+                            <i class="fa-solid fa-paper-plane mr-2"></i> TO'LIQ HISOBOTNI TELEGRAMGA YUBORISH
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Custom Message & Preview -->
+                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="orbitron text-sm font-bold text-sky-400 uppercase mb-3"><i class="fa-solid fa-terminal mr-1"></i> Yuboriladigan Hisobot Ko'rinishi:</h3>
+                        <pre id="report-preview" class="text-xs text-slate-300 whitespace-pre-wrap font-mono bg-slate-950 p-4 rounded-xl border border-slate-800 max-h-60 overflow-y-auto"></pre>
+                    </div>
+
+                    <div id="status-log" class="mt-4 text-sm font-semibold text-center py-2 rounded-lg hidden"></div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const BOT_TOKEN = "8970115945:AAEQ-I7hAtgg_bTVC24vAqgoJbPd3tZkztE";
+
+        function generateReportText() {
+            const tasks = JSON.parse(localStorage.getItem('cyber_tasks')) || [];
+            const user = JSON.parse(localStorage.getItem('cyber_user')) || { coins: 0, xp: 0, highScore: 0 };
+            const completed = tasks.filter(t => t.completed);
+            const pending = tasks.filter(t => !t.completed);
+
+            let text = `⚡ *CYBER-TASK PRO | KUNLIK HISOBOT*\n`;
+            text += `📅 Sana: ${new Date().toLocaleDateString('uz-UZ')}\n`;
+            text += `━━━━━━━━━━━━━━━━━━━━\n`;
+            text += `🏆 Daraja (Level): *${Math.floor(user.xp / 100) + 1}* (${user.xp} XP)\n`;
+            text += `🪙 Tangalar (Coins): *${user.coins}*\n`;
+            text += `🎮 Mini-O'yin Rekordi: *${user.highScore || 0}*\n`;
+            text += `📊 Bajarildi: *${completed.length} / ${tasks.length}*\n`;
+            text += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+
+            text += `🔥 *KUTILAYOTGAN VAZIFALAR (${pending.length}):*\n`;
+            if (pending.length === 0) text += `_Barcha vazifalar bajarilgan!_\n`;
+            pending.forEach((t, i) => {
+                text += `${i + 1}. ⏳ ${t.title} [${t.priority.toUpperCase()}]\n`;
+            });
+
+            text += `\n✅ *BAJARILGAN VAZIFALAR (${completed.length}):*\n`;
+            if (completed.length === 0) text += `_Hozircha yo'q_\n`;
+            completed.forEach((t, i) => {
+                text += `${i + 1}. ✔️ ~${t.title}~\n`;
+            });
+
+            document.getElementById('report-preview').innerText = text;
+            return text;
+        }
+
+        function showLog(msg, isSuccess = true) {
+            const log = document.getElementById('status-log');
+            log.classList.remove('hidden');
+            log.className = `mt-4 text-sm font-bold text-center py-2.5 px-4 rounded-xl ${isSuccess ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-rose-500/20 text-rose-400 border border-rose-500/40'}`;
+            log.innerText = msg;
+        }
+
+        async function autoDetectChatId() {
+            showLog("Botdan oxirgi xabarlar tekshirilmoqda...", true);
+            try {
+                const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates`);
+                const data = await res.json();
+                if (data.ok && data.result.length > 0) {
+                    const lastMsg = data.result[data.result.length - 1];
+                    const chatId = lastMsg.message?.chat?.id || lastMsg.my_chat_member?.chat?.id;
+                    if (chatId) {
+                        document.getElementById('chat-id').value = chatId;
+                        localStorage.setItem('cyber_chat_id', chatId);
+                        showLog(`✅ Chat ID muvaffaqiyatli topildi: ${chatId}`, true);
+                        return;
+                    }
+                }
+                showLog("⚠️ Chat ID topilmadi! Avval Telegramda botingizga /start yozib yuboring.", false);
+            } catch (err) {
+                showLog("❌ Internet xatosi yoki Token noto'g'ri!", false);
+            }
+        }
+
+        async function sendFullReport() {
+            const chatId = document.getElementById('chat-id').value.trim();
+            if (!chatId) {
+                showLog("⚠️ Iltimos, avval Chat ID kiriting yoki 'Avto-Aniqlash' tugmasini bosing!", false);
+                return;
+            }
+            localStorage.setItem('cyber_chat_id', chatId);
+            const text = generateReportText();
+
+            showLog("⏳ Telegramga yuborilmoqda...", true);
+            try {
+                const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: text,
+                        parse_mode: 'Markdown'
+                    })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showLog("🚀 Hisobot Telegram botingizga muvaffaqiyatli yuborildi!", true);
+                } else {
+                    showLog(`❌ Xatolik: ${data.description}`, false);
+                }
+            } catch (err) {
+                showLog("❌ Tarmoq xatosi yuz berdi!", false);
+            }
+        }
+
+        // Load saved chat id
+        const savedChat = localStorage.getItem('cyber_chat_id');
+        if (savedChat) document.getElementById('chat-id').value = savedChat;
+        generateReportText();
+    </script>
+</body>
+</html>
